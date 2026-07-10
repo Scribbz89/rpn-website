@@ -1,4 +1,4 @@
-/* RPN Website — Main Stylesheet */
+﻿/* RPN Website — Main Stylesheet */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -629,4 +629,208 @@ body {
 @media (max-width: 480px) {
     .download-box { padding: 28px 20px; }
     .join-step { padding: 16px; }
+}
+
+/* ── PHONE MOCKUP ── */
+.app-preview {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-bottom: 40px;
+}
+
+.phone-mockup {
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 84px;
+}
+
+.phone-frame {
+    width: 280px;
+    background: #0a140a;
+    border: 2px solid #c8a84b;
+    border-radius: 32px;
+    padding: 10px;
+    box-shadow: 0 0 40px rgba(200,168,75,0.25), 0 0 0 4px #1a2a1a;
+}
+
+.phone-status-bar {
+    font-family: 'Oswald', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    color: #c8a84b;
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 6px 0 4px;
+    border-bottom: 1px solid #2a4a2a;
+    margin-bottom: 0;
+}
+
+.phone-screen {
+    background: #0e1a0e;
+    border-radius: 22px;
+    padding: 12px 10px 8px;
+}
+
+.mock-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #6dbf5a;
+    text-align: center;
+    letter-spacing: 3px;
+    margin-bottom: 2px;
+}
+
+.mock-sub {
+    font-size: 9px;
+    color: #7a8f78;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.mock-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.mock-card {
+    border-radius: 8px;
+    padding: 8px 6px;
+    text-align: center;
+    border: 1px solid;
+}
+
+.mock-card-amber { border-color: #c8a84b; background: rgba(200,168,75,0.08); }
+.mock-card-green  { border-color: #6dbf5a; background: rgba(109,191,90,0.08); }
+.mock-card-red    { border-color: #d9534f; background: rgba(217,83,79,0.08); }
+
+.mock-card-val {
+    font-family: 'Oswald', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #c8a84b;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.mock-card-green .mock-card-val { color: #6dbf5a; }
+.mock-card-red .mock-card-val { color: #d9534f; }
+
+.mock-card-label {
+    font-size: 7px;
+    color: #7a8f78;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.mock-journey {
+    background: #131f13;
+    border-radius: 6px;
+    padding: 7px 8px;
+    margin-bottom: 8px;
+}
+
+.mock-journey-label {
+    font-size: 7px;
+    color: #7a8f78;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.mock-milestones {
+    display: flex;
+    gap: 4px;
+}
+
+.mock-ms {
+    flex: 1;
+    text-align: center;
+    padding: 5px 3px;
+    border-radius: 5px;
+    border: 1px solid;
+}
+
+.mock-ms-done   { border-color: #4a8a3a; background: rgba(74,138,58,0.2); }
+.mock-ms-active { border-color: #c8a84b; background: rgba(200,168,75,0.1); }
+.mock-ms-locked { border-color: #2a4a2a; background: transparent; }
+
+.mock-ms-icon {
+    font-size: 10px;
+    color: #6dbf5a;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.mock-ms-active .mock-ms-icon { color: #c8a84b; }
+.mock-ms-locked .mock-ms-icon { color: #3a5a3a; }
+
+.mock-ms-name {
+    font-size: 8px;
+    font-weight: 700;
+    color: #d4d9d4;
+    line-height: 1.2;
+}
+
+.mock-ms-locked .mock-ms-name { color: #4a6a4a; }
+
+.mock-ms-days {
+    font-size: 7px;
+    color: #7a8f78;
+}
+
+.mock-emergency {
+    background: rgba(200,168,75,0.08);
+    border: 1px solid #c8a84b;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 8px;
+    font-weight: 700;
+    color: #c8a84b;
+    text-align: center;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.mock-nav {
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid #2a4a2a;
+    padding-top: 6px;
+}
+
+.mock-nav-item {
+    font-size: 12px;
+    text-align: center;
+    color: #4a6a4a;
+    line-height: 1.3;
+}
+
+.mock-nav-item span {
+    display: block;
+    font-size: 6px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 1px;
+}
+
+.mock-nav-active { color: #6dbf5a; }
+
+.features-compact {
+    margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+    .app-preview {
+        grid-template-columns: 1fr;
+    }
+    .phone-mockup {
+        position: static;
+    }
 }
