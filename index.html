@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Prepper Network — Stay Prepared, Stay Ready, Stay Connected</title>
+    <meta name="description" content="The Radio Prepper Network is a UK and Europe-wide emergency preparedness community built around radio, field skills and the RPN Field Brain app.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="#" class="nav-logo">
+            <img src="img/rpn-logo.png" alt="RPN Logo" class="nav-logo-img">
+            <span class="nav-logo-text">Radio Prepper Network</span>
+        </a>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#app">Field Brain</a>
+            <a href="#join">Join</a>
+            <a href="#download" class="nav-cta">Download App</a>
+        </div>
+        <button class="nav-hamburger" onclick="toggleMenu()" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile">
+        <a href="#about" onclick="toggleMenu()">About</a>
+        <a href="#app" onclick="toggleMenu()">Field Brain</a>
+        <a href="#join" onclick="toggleMenu()">Join</a>
+        <a href="#download" onclick="toggleMenu()">Download App</a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+        <img src="img/rpn-logo.png" alt="Radio Prepper Network" class="hero-logo">
+        <p class="hero-tagline">Stay Prepared. Stay Ready. Stay Connected.</p>
+        <p class="hero-sub">A UK &amp; Europe-wide emergency preparedness community built around radio, practical field skills and the people who take readiness seriously.</p>
+        <div class="hero-btns">
+            <a href="#download" class="btn btn-primary">Download Field Brain App</a>
+            <a href="#join" class="btn btn-outline">Join the Network</a>
+        </div>
+    </div>
+    <div class="hero-scroll">
+        <span>&#8595;</span>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+    <div class="container">
+        <div class="section-label">Who We Are</div>
+        <h2 class="section-title">Built by preppers, for preppers</h2>
+        <p class="section-intro">RPN is a grassroots community of people across the UK and Europe who believe in being ready before something goes wrong — not after. We are not doomsday preppers. We are ordinary people who want to be prepared for the kind of emergencies that actually happen: power cuts, severe weather, supply disruptions, communications failures.</p>
+
+        <div class="pillars">
+            <div class="pillar">
+                <div class="pillar-icon">&#128225;</div>
+                <h3>Radio First</h3>
+                <p>When the internet and mobile networks go down, radio still works. We put radio at the heart of everything — from local nets to MeshCore mesh networks.</p>
+            </div>
+            <div class="pillar">
+                <div class="pillar-icon">&#128101;</div>
+                <h3>Community</h3>
+                <p>Preparedness is stronger together. RPN connects like-minded people across the UK and Europe so no one is prepping alone.</p>
+            </div>
+            <div class="pillar">
+                <div class="pillar-icon">&#127981;</div>
+                <h3>Practical Skills</h3>
+                <p>First aid, water purification, food storage, navigation, field communications — real skills that work in the real world.</p>
+            </div>
+            <div class="pillar">
+                <div class="pillar-icon">&#128241;</div>
+                <h3>Field Brain App</h3>
+                <p>Our free Android app puts your stockpile tracker, emergency scenarios, checklists and community map in your pocket — all working offline.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- APP -->
+<section class="section section-dark" id="app">
+    <div class="container">
+        <div class="section-label">The App</div>
+        <h2 class="section-title">RPN Field Brain</h2>
+        <p class="section-intro">A free Android app built for preppers and designed to work completely offline. Your emergency toolkit — always in your pocket.</p>
+
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">&#128230;</div>
+                <div class="feature-body">
+                    <h4>Stockpile Tracker</h4>
+                    <p>Track your food, water, medical supplies and power. The app tells you exactly how many days your household is covered — and what to top up first.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">&#127919;</div>
+                <div class="feature-body">
+                    <h4>72-Hour Goal System</h4>
+                    <p>Start with the basics. The app guides you from 72 hours ready, to 7 days, to 30 days — one milestone at a time. It even builds your starter shopping list.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">&#128680;</div>
+                <div class="feature-body">
+                    <h4>Emergency Scenarios</h4>
+                    <p>Power cut, flooding, evacuation, shelter in place — step-by-step guides for real emergencies, all available offline when you need them most.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">&#9989;</div>
+                <div class="feature-body">
+                    <h4>Prep Checklists</h4>
+                    <p>Go-bag, vehicle kit, everyday carry, first aid, documents — pre-built checklists covering everything a prepared household needs.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">&#9889;</div>
+                <div class="feature-body">
+                    <h4>Power Budget</h4>
+                    <p>Add your batteries, power banks and solar panels. Tell the app which devices you use and it calculates how many days of off-grid power you have.</p>
+                </div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">&#127758;</div>
+                <div class="feature-body">
+                    <h4>Community Map</h4>
+                    <p>See RPN members near you, share your location during emergencies, log radio contacts and connect with your local network.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-badges">
+            <div class="badge-note">Free. No subscription. Works offline.</div>
+        </div>
+    </div>
+</section>
+
+<!-- DOWNLOAD -->
+<section class="section section-accent" id="download">
+    <div class="container container-narrow">
+        <div class="section-label">Get the App</div>
+        <h2 class="section-title">Download RPN Field Brain</h2>
+        <p class="section-intro">Available free for Android. Download the APK directly — no app store needed.</p>
+
+        <div class="download-box">
+            <div class="download-icon">&#128241;</div>
+            <h3>Android APK</h3>
+            <p>Download and install directly on any Android phone or tablet running Android 7.0 or later.</p>
+            <a href="apk/rpn-field-brain.apk" class="btn btn-primary btn-large" download>Download Field Brain v1.0</a>
+            <div class="download-note">
+                <strong>How to install:</strong><br>
+                1. Tap the download link above<br>
+                2. When prompted, allow installation from unknown sources<br>
+                3. Tap the downloaded file to install<br>
+                4. Open Field Brain and follow the setup guide
+            </div>
+        </div>
+
+        <div class="coming-soon">
+            <p>&#128274; iOS &amp; Windows versions coming soon</p>
+        </div>
+    </div>
+</section>
+
+<!-- JOIN -->
+<section class="section" id="join">
+    <div class="container container-narrow">
+        <div class="section-label">Get Involved</div>
+        <h2 class="section-title">Join the Network</h2>
+        <p class="section-intro">RPN is free to join. Create your account in Field Brain to access the community map, connect with members near you and get alerts from your local network.</p>
+
+        <div class="join-steps">
+            <div class="join-step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <h4>Download Field Brain</h4>
+                    <p>Get the app on your Android device using the link above.</p>
+                </div>
+            </div>
+            <div class="join-step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <h4>Set up your household</h4>
+                    <p>Follow the beginner wizard — takes 2 minutes and gets your stockpile started.</p>
+                </div>
+            </div>
+            <div class="join-step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <h4>Create your RPN account</h4>
+                    <p>Register in the app with your callsign or name to unlock the community features.</p>
+                </div>
+            </div>
+            <div class="join-step">
+                <div class="step-num">4</div>
+                <div class="step-body">
+                    <h4>Connect with your local network</h4>
+                    <p>Find members near you on the community map and get involved with your regional group.</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center;margin-top:40px;">
+            <a href="#download" class="btn btn-primary">Get Started — Download the App</a>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="img/rpn-logo.png" alt="RPN" class="footer-logo">
+                <div>
+                    <div class="footer-name">Radio Prepper Network</div>
+                    <div class="footer-tagline">Stay Prepared. Stay Ready. Stay Connected.</div>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#app">Field Brain</a>
+                <a href="#download">Download</a>
+                <a href="#join">Join</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Radio Prepper Network. All rights reserved.</p>
+            <p style="font-size:11px;color:#4a6a4a;margin-top:4px;">RPN Field Brain is provided for informational purposes only. Always call 999 in a life-threatening emergency.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
