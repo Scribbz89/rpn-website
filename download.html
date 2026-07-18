@@ -248,7 +248,13 @@ async function init() {
             <h3>Windows — how to install</h3>
             <div class="install-step"><div class="install-step-num">1</div><div>Download the .exe — it's a portable app, no installer needed.</div></div>
             <div class="install-step"><div class="install-step-num">2</div><div>If Windows SmartScreen warns you, click <strong style="color:var(--text);">More info → Run anyway</strong>.</div></div>
-            <div class="install-step"><div class="install-step-num">3</div><div>Field Brain will launch. Your data is saved in your user profile.</div></div>
+            <div class="install-step"><div class="install-step-num">3</div><div>If your antivirus (McAfee, Norton etc.) blocks it, add it to your <strong style="color:var(--text);">exclusions or quarantine restore</strong> — this is a known false positive with unsigned beta apps.</div></div>
+            <div class="install-step"><div class="install-step-num">4</div><div>Field Brain will launch. Your data is saved in your user profile.</div></div>
+        </div>
+
+        <div style="background:rgba(200,168,75,0.08);border:1px solid rgba(200,168,75,0.3);border-radius:8px;padding:14px 16px;margin-top:12px;font-size:12px;color:#a08848;line-height:1.6;">
+            <strong style="color:#c8a84b;">&#9888; Windows antivirus warning</strong><br>
+            Because this is a beta build it is not yet code-signed. Windows and some antivirus tools (McAfee, Norton) may flag it as suspicious — this is a false positive. The app is safe. We are working on getting a code signing certificate before the V1 release.
         </div>
 
         <div class="install-steps" style="margin-top:12px;">
