@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .beta-page { padding-top: 64px; min-height: 100vh; background: var(--green-dark); }
         .beta-hero {
@@ -285,18 +284,7 @@
 </footer>
 
 <script>
-// ============================================================
-// SUPABASE CONFIG
-// 1. Go to https://supabase.com and create a free account
-// 2. Create a new project
-// 3. Go to Project Settings → API
-// 4. Copy your Project URL and anon/public key below
-// ============================================================
-const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
-// ============================================================
-
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const API = 'https://rpn-server.onrender.com';
 
 function showError(msg) {
     const el = document.getElementById('formError');
@@ -333,36 +321,21 @@ async function submitForm(e) {
 
     const ip = await getIp();
 
-    const { data, error } = await sb
-        .from('beta_signups')
-        .insert({ name: name || null, email, ip_address: ip })
-        .select('token')
-        .single();
-
-    if (error) {
-        if (error.code === '23505') {
-            // Already signed up — fetch their existing token
-            const { data: existing, error: fetchErr } = await sb
-                .from('beta_signups')
-                .select('token')
-                .eq('email', email)
-                .single();
-
-            if (existing) {
-                window.location.href = 'download.html?token=' + existing.token;
-                return;
-            }
-            showError('This email is already registered. Check your original sign-up link or contact us.');
-        } else {
-            console.error(error);
-            showError('Something went wrong. Please try again in a moment.');
-        }
+    try {
+        const res = await fetch(API + '/beta/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: name || null, email, ip_address: ip }),
+        });
+        if (!res.ok) throw new Error('Server error ' + res.status);
+        const data = await res.json();
+        window.location.href = 'download.html?token=' + data.token;
+    } catch(err) {
+        console.error(err);
+        showError('Something went wrong. Please try again in a moment.');
         btn.disabled = false;
         btn.textContent = 'Join Beta & Download →';
-        return;
     }
-
-    window.location.href = 'download.html?token=' + data.token;
 }
 </script>
 </body>

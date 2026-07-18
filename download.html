@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .dl-page { padding-top: 64px; min-height: 100vh; display: flex; flex-direction: column; }
         .dl-main {
@@ -186,14 +185,7 @@
 </footer>
 
 <script>
-// ============================================================
-// SUPABASE CONFIG — same values as beta.html
-// ============================================================
-const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
-// ============================================================
-
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const API     = 'https://rpn-server.onrender.com';
 const APK_PATH = 'apk/rpn-field-brain.apk';
 
 const params = new URLSearchParams(window.location.search);
@@ -205,34 +197,27 @@ function showError(title, msg) {
         + '<a href="beta.html" class="btn-download" style="display:block;text-decoration:none;">Sign up for beta access &rarr;</a>';
 }
 
-async function trackDownload(token) {
-    await sb.from('beta_signups')
-        .update({ download_count: sb.rpc ? undefined : undefined }) // placeholder — real update below
-        .eq('token', token);
-
-    // Increment download_count and set last_downloaded_at
-    await sb.rpc('increment_download', { ttoken: token });
-}
-
 async function init() {
     if (!token) {
         showError('No Access Token', 'You need to sign up for the beta to download the app.');
         return;
     }
 
-    const { data, error } = await sb
-        .from('beta_signups')
-        .select('id, name, email, token, download_count')
-        .eq('token', token)
-        .single();
-
-    if (error || !data) {
-        showError('Invalid or Expired Link', 'This download link is not valid. Please sign up again or contact us if you think this is an error.');
+    let data;
+    try {
+        const res = await fetch(API + '/beta/verify/' + encodeURIComponent(token));
+        if (res.status === 404) {
+            showError('Invalid or Expired Link', 'This download link is not valid. Please sign up again or contact us if you think this is an error.');
+            return;
+        }
+        if (!res.ok) throw new Error('Server error ' + res.status);
+        data = await res.json();
+    } catch(err) {
+        showError('Connection Error', 'Could not reach the server. Please try again in a moment.');
         return;
     }
 
-    const firstName = data.name ? data.name.split(' ')[0] : 'Beta Tester';
-    const pageUrl   = window.location.origin + window.location.pathname + '?token=' + token;
+    const pageUrl = window.location.origin + window.location.pathname + '?token=' + token;
 
     document.getElementById('dlCard').innerHTML = `
         <div class="dl-icon">&#128737;</div>
@@ -240,7 +225,7 @@ async function init() {
         <h1>Thanks for joining<br>the RPN Beta</h1>
         <p class="dl-sub">Your feedback helps improve the app before the official release. Download the latest beta build below.</p>
 
-        <a href="${APK_PATH}" class="btn-download" id="dlBtn" download onclick="onDownload()">
+        <a href="${APK_PATH}" class="btn-download" id="dlBtn" download>
             &#8659; Download Field Brain Beta
         </a>
 
@@ -270,18 +255,6 @@ async function init() {
             <span style="font-size:11px;word-break:break-all;color:#3a5a3a;">${pageUrl}</span>
         </div>
     `;
-
-    // Track this page visit
-    try {
-        await sb.from('beta_signups')
-            .update({ last_downloaded_at: new Date().toISOString(), download_count: (data.download_count || 0) + 1 })
-            .eq('token', token);
-    } catch(e) { /* non-critical */ }
-}
-
-function onDownload() {
-    // Secondary download count bump on explicit click (belt and braces)
-    // Already tracked on page load above
 }
 
 init();

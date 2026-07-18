@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body { padding-top: 64px; }
         .admin-main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
@@ -257,30 +256,25 @@
 </div>
 
 <script>
-// ============================================================
-// SUPABASE CONFIG — use your SERVICE ROLE key here for admin
-// (Go to Project Settings → API → service_role key)
-// Keep this page password-protected and never share the URL.
-// ============================================================
-const SUPABASE_URL          = 'YOUR_SUPABASE_URL';
-const SUPABASE_SERVICE_KEY  = 'YOUR_SUPABASE_SERVICE_ROLE_KEY';
-// ============================================================
+const API = 'https://rpn-server.onrender.com';
 
 // ============================================================
-// ADMIN PASSWORD — change this to something only you know
+// ADMIN CONFIG
+// Set BETA_ADMIN_KEY env var on your Render service.
+// The password below must match that env var value.
 // ============================================================
 const ADMIN_PASSWORD = 'RPNAdmin2026';
 // ============================================================
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-
-let _allData = [];
-let _sortCol = 'signed_up_at';
+let _adminKey = '';
+let _allData  = [];
+let _sortCol  = 'signed_up_at';
 let _sortAsc  = false;
 
 function checkPass() {
     const val = document.getElementById('gatePass').value;
     if (val === ADMIN_PASSWORD) {
+        _adminKey = val;
         document.getElementById('gate').style.display = 'none';
         document.getElementById('adminContent').style.display = 'block';
         loadData();
@@ -294,19 +288,18 @@ function checkPass() {
 async function loadData() {
     document.getElementById('tableBody').innerHTML = '<tr><td colspan="6" class="no-results">Loading…</td></tr>';
 
-    const { data, error } = await sb
-        .from('beta_signups')
-        .select('*')
-        .order('signed_up_at', { ascending: false });
-
-    if (error) {
-        document.getElementById('tableBody').innerHTML = '<tr><td colspan="6" class="no-results" style="color:#e07070;">Error loading data: ' + error.message + '</td></tr>';
-        return;
+    try {
+        const res = await fetch(API + '/beta/admin/testers', {
+            headers: { 'x-admin-key': _adminKey }
+        });
+        if (!res.ok) throw new Error('Server error ' + res.status);
+        const data = await res.json();
+        _allData = data || [];
+        updateStats(_allData);
+        renderTable(_allData);
+    } catch(err) {
+        document.getElementById('tableBody').innerHTML = '<tr><td colspan="6" class="no-results" style="color:#e07070;">Error loading data: ' + err.message + '</td></tr>';
     }
-
-    _allData = data || [];
-    updateStats(_allData);
-    renderTable(_allData);
 }
 
 function updateStats(data) {
