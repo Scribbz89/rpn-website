@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPN Beta Admin</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { padding-top: 64px; }
+        .admin-main { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
+        .admin-header { margin-bottom: 32px; }
+        .admin-header h1 {
+            font-family: var(--font-heading);
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+        .admin-header p { font-size: 13px; color: var(--text-muted); }
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 14px; margin-bottom: 32px; }
+        .stat-card {
+            background: var(--green-surface);
+            border: 1px solid var(--green-border);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .stat-val { font-family: var(--font-heading); font-size: 32px; font-weight: 700; color: var(--green-bright); line-height: 1; }
+        .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            background: var(--green-surface);
+            border: 1px solid var(--green-border);
+            border-radius: 8px;
+            padding: 11px 16px;
+            font-size: 14px;
+            color: var(--text);
+            font-family: var(--font-body);
+            outline: none;
+        }
+        .search-input:focus { border-color: var(--green-accent); }
+        .search-input::placeholder { color: #3a5a3a; }
+        .btn-export {
+            background: none;
+            border: 1px solid var(--green-border);
+            border-radius: 8px;
+            padding: 11px 20px;
+            font-size: 13px;
+            font-family: var(--font-body);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+            white-space: nowrap;
+        }
+        .btn-export:hover { border-color: var(--green-accent); color: var(--green-bright); }
+        .btn-refresh {
+            background: var(--green-accent);
+            border: none;
+            border-radius: 8px;
+            padding: 11px 20px;
+            font-size: 13px;
+            font-family: var(--font-body);
+            color: var(--white);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .btn-refresh:hover { background: var(--green-bright); }
+        .table-wrap {
+            background: var(--green-surface);
+            border: 1px solid var(--green-border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .data-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-family: var(--font-heading);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--green-bright);
+            background: var(--green-mid);
+            border-bottom: 1px solid var(--green-border);
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .data-table th:hover { color: var(--white); }
+        .data-table td {
+            padding: 11px 16px;
+            border-bottom: 1px solid #1a2a1a;
+            color: var(--text);
+            vertical-align: middle;
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(42,74,42,0.2); }
+        .email-cell { color: var(--green-bright); font-weight: 500; }
+        .dl-count {
+            display: inline-block;
+            background: var(--green-mid);
+            border: 1px solid var(--green-border);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .dl-count.has-dl { border-color: var(--green-accent); color: var(--green-bright); }
+        .token-cell { font-size: 11px; color: #3a5a3a; font-family: monospace; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .copy-btn { background: none; border: none; cursor: pointer; color: #4a6a4a; font-size: 12px; padding: 2px 4px; }
+        .copy-btn:hover { color: var(--green-bright); }
+        .no-results { text-align: center; padding: 48px; color: var(--text-muted); font-size: 14px; }
+        .table-count { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+
+        /* Password gate */
+        .gate {
+            position: fixed; inset: 0; background: var(--green-dark);
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
+        }
+        .gate-box {
+            background: var(--green-surface);
+            border: 1px solid var(--green-border);
+            border-radius: 14px;
+            padding: 40px 36px;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+        }
+        .gate-box h2 {
+            font-family: var(--font-heading);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .gate-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+        .gate-input {
+            width: 100%;
+            background: var(--green-mid);
+            border: 1px solid var(--green-border);
+            border-radius: 8px;
+            padding: 13px 16px;
+            font-size: 15px;
+            color: var(--text);
+            font-family: var(--font-body);
+            outline: none;
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+        }
+        .gate-input:focus { border-color: var(--green-accent); }
+        .gate-btn {
+            width: 100%;
+            background: var(--green-accent);
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-family: var(--font-heading);
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--white);
+            cursor: pointer;
+        }
+        .gate-btn:hover { background: var(--green-bright); }
+        .gate-error { color: #e07070; font-size: 13px; margin-top: 10px; display: none; }
+
+        @media (max-width: 768px) {
+            .data-table th:nth-child(4),
+            .data-table td:nth-child(4),
+            .data-table th:nth-child(5),
+            .data-table td:nth-child(5) { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div class="gate" id="gate">
+    <div class="gate-box">
+        <div style="font-size:40px;margin-bottom:12px;">&#128274;</div>
+        <h2>Admin Access</h2>
+        <p>RPN Beta Admin — enter password to continue</p>
+        <input type="password" class="gate-input" id="gatePass" placeholder="Password" onkeydown="if(event.key==='Enter')checkPass()">
+        <button class="gate-btn" onclick="checkPass()">Enter</button>
+        <div class="gate-error" id="gateErr">Incorrect password.</div>
+    </div>
+</div>
+
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">
+            <img src="img/rpn-logo.png" alt="RPN Logo" class="nav-logo-img">
+            <span class="nav-logo-text">Radio Prepper Network</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html">Website</a>
+            <a href="beta.html">Beta Page</a>
+        </div>
+    </div>
+</nav>
+
+<div class="admin-main" id="adminContent" style="display:none;">
+    <div class="admin-header">
+        <h1>&#9881; Beta Admin</h1>
+        <p>RPN Field Brain Beta — tester management dashboard</p>
+    </div>
+
+    <div class="stats-row" id="statsRow">
+        <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-label">Total Signups</div></div>
+        <div class="stat-card"><div class="stat-val" id="statToday">—</div><div class="stat-label">Signups Today</div></div>
+        <div class="stat-card"><div class="stat-val" id="statDownloads">—</div><div class="stat-label">Total Downloads</div></div>
+        <div class="stat-card"><div class="stat-val" id="statActive">—</div><div class="stat-label">Downloaded App</div></div>
+    </div>
+
+    <div class="toolbar">
+        <input type="search" class="search-input" id="searchInput" placeholder="Search by name or email…" oninput="filterTable()">
+        <button class="btn-refresh" onclick="loadData()">&#8635; Refresh</button>
+        <button class="btn-export" onclick="exportCsv()">&#8659; Export CSV</button>
+    </div>
+
+    <div class="table-count" id="tableCount"></div>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th onclick="sortBy('name')"># &nbsp;Name &#8597;</th>
+                    <th onclick="sortBy('email')">Email &#8597;</th>
+                    <th onclick="sortBy('signed_up_at')">Signed Up &#8597;</th>
+                    <th onclick="sortBy('download_count')">Downloads &#8597;</th>
+                    <th onclick="sortBy('last_downloaded_at')">Last Download &#8597;</th>
+                    <th>Link</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="6" class="no-results">Loading…</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// SUPABASE CONFIG — use your SERVICE ROLE key here for admin
+// (Go to Project Settings → API → service_role key)
+// Keep this page password-protected and never share the URL.
+// ============================================================
+const SUPABASE_URL          = 'YOUR_SUPABASE_URL';
+const SUPABASE_SERVICE_KEY  = 'YOUR_SUPABASE_SERVICE_ROLE_KEY';
+// ============================================================
+
+// ============================================================
+// ADMIN PASSWORD — change this to something only you know
+// ============================================================
+const ADMIN_PASSWORD = 'RPNAdmin2026';
+// ============================================================
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+let _allData = [];
+let _sortCol = 'signed_up_at';
+let _sortAsc  = false;
+
+function checkPass() {
+    const val = document.getElementById('gatePass').value;
+    if (val === ADMIN_PASSWORD) {
+        document.getElementById('gate').style.display = 'none';
+        document.getElementById('adminContent').style.display = 'block';
+        loadData();
+    } else {
+        document.getElementById('gateErr').style.display = 'block';
+        document.getElementById('gatePass').value = '';
+        document.getElementById('gatePass').focus();
+    }
+}
+
+async function loadData() {
+    document.getElementById('tableBody').innerHTML = '<tr><td colspan="6" class="no-results">Loading…</td></tr>';
+
+    const { data, error } = await sb
+        .from('beta_signups')
+        .select('*')
+        .order('signed_up_at', { ascending: false });
+
+    if (error) {
+        document.getElementById('tableBody').innerHTML = '<tr><td colspan="6" class="no-results" style="color:#e07070;">Error loading data: ' + error.message + '</td></tr>';
+        return;
+    }
+
+    _allData = data || [];
+    updateStats(_allData);
+    renderTable(_allData);
+}
+
+function updateStats(data) {
+    const today = new Date().toISOString().slice(0, 10);
+    document.getElementById('statTotal').textContent     = data.length;
+    document.getElementById('statToday').textContent     = data.filter(r => (r.signed_up_at || '').slice(0,10) === today).length;
+    document.getElementById('statDownloads').textContent = data.reduce((s, r) => s + (r.download_count || 0), 0);
+    document.getElementById('statActive').textContent    = data.filter(r => r.download_count > 0).length;
+}
+
+function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' })
+        + ' ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+}
+
+function renderTable(data) {
+    document.getElementById('tableCount').textContent = 'Showing ' + data.length + ' of ' + _allData.length + ' testers';
+
+    if (!data.length) {
+        document.getElementById('tableBody').innerHTML = '<tr><td colspan="6" class="no-results">No results found.</td></tr>';
+        return;
+    }
+
+    const origin = window.location.origin;
+    document.getElementById('tableBody').innerHTML = data.map(function(r, i) {
+        const dlClass = r.download_count > 0 ? 'dl-count has-dl' : 'dl-count';
+        const dlLink  = origin + '/download.html?token=' + r.token;
+        return '<tr>'
+            + '<td style="color:var(--text-muted);font-size:12px;">' + (r.name ? '<strong style="color:var(--text);">' + esc(r.name) + '</strong>' : '<span style="color:#3a5a3a;">—</span>') + '</td>'
+            + '<td class="email-cell">' + esc(r.email) + '</td>'
+            + '<td style="font-size:12px;color:var(--text-muted);white-space:nowrap;">' + fmtDate(r.signed_up_at) + '</td>'
+            + '<td><span class="' + dlClass + '">' + (r.download_count || 0) + '</span></td>'
+            + '<td style="font-size:12px;color:var(--text-muted);white-space:nowrap;">' + fmtDate(r.last_downloaded_at) + '</td>'
+            + '<td><button class="copy-btn" onclick="copyLink(\'' + r.token + '\')" title="Copy download link">&#128279; Copy</button></td>'
+            + '</tr>';
+    }).join('');
+}
+
+function copyLink(token) {
+    const link = window.location.origin + '/download.html?token=' + token;
+    navigator.clipboard.writeText(link).then(function() {
+        // brief visual feedback handled by browser
+    });
+}
+
+function filterTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = !q ? _allData : _allData.filter(function(r) {
+        return (r.email || '').toLowerCase().includes(q) || (r.name || '').toLowerCase().includes(q);
+    });
+    renderTable(filtered);
+}
+
+function sortBy(col) {
+    if (_sortCol === col) { _sortAsc = !_sortAsc; } else { _sortCol = col; _sortAsc = false; }
+    const sorted = [..._allData].sort(function(a, b) {
+        const av = a[col] || ''; const bv = b[col] || '';
+        const cmp = typeof av === 'number' ? av - bv : av.toString().localeCompare(bv.toString());
+        return _sortAsc ? cmp : -cmp;
+    });
+    renderTable(sorted);
+}
+
+function exportCsv() {
+    const headers = ['Name', 'Email', 'Signed Up', 'Download Count', 'Last Downloaded', 'IP Address', 'Token'];
+    const rows = _allData.map(function(r) {
+        return [
+            r.name || '',
+            r.email,
+            r.signed_up_at ? new Date(r.signed_up_at).toLocaleString('en-GB') : '',
+            r.download_count || 0,
+            r.last_downloaded_at ? new Date(r.last_downloaded_at).toLocaleString('en-GB') : '',
+            r.ip_address || '',
+            r.token
+        ].map(function(v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(',');
+    });
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'rpn-beta-testers-' + new Date().toISOString().slice(0,10) + '.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

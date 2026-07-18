@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPN Field Brain Beta — Sign Up</title>
+    <meta name="description" content="Join the RPN Field Brain beta programme. Help us test the future of offline emergency preparedness.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .beta-page { padding-top: 64px; min-height: 100vh; background: var(--green-dark); }
+        .beta-hero {
+            background: linear-gradient(135deg, #080e08 0%, #0d1a0d 100%);
+            border-bottom: 1px solid var(--green-border);
+            padding: 64px 24px 52px;
+            text-align: center;
+        }
+        .beta-badge {
+            display: inline-block;
+            background: rgba(200,168,75,0.12);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-family: var(--font-heading);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        .beta-hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+        .beta-hero h1 span { color: var(--green-bright); }
+        .beta-hero p {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.8;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+        .beta-disclaimer {
+            display: inline-block;
+            margin-top: 18px;
+            font-size: 12px;
+            color: #5a6e5a;
+            background: #0d1a0d;
+            border: 1px solid #1a2a1a;
+            border-radius: 6px;
+            padding: 6px 14px;
+        }
+        .beta-main {
+            max-width: 560px;
+            margin: 0 auto;
+            padding: 52px 24px 80px;
+        }
+        .beta-perks {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+        .beta-perk {
+            background: var(--green-surface);
+            border: 1px solid var(--green-border);
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+        .beta-perk-icon { font-size: 20px; flex-shrink: 0; }
+        .beta-perk-text { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+        .beta-perk-text strong { display: block; color: var(--text); font-size: 13px; margin-bottom: 2px; }
+        .form-box {
+            background: var(--green-surface);
+            border: 1px solid var(--green-border);
+            border-radius: 14px;
+            padding: 32px 28px;
+        }
+        .form-box h2 {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .form-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+        .form-field { margin-bottom: 18px; }
+        .form-field label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 7px;
+        }
+        .form-field input {
+            width: 100%;
+            background: var(--green-mid);
+            border: 1px solid var(--green-border);
+            border-radius: 8px;
+            padding: 13px 16px;
+            font-size: 15px;
+            color: var(--text);
+            font-family: var(--font-body);
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        .form-field input:focus { border-color: var(--green-accent); }
+        .form-field input::placeholder { color: #3a5a3a; }
+        .btn-submit {
+            width: 100%;
+            background: var(--green-accent);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: var(--font-heading);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.15s;
+            margin-top: 6px;
+        }
+        .btn-submit:hover:not(:disabled) { background: var(--green-bright); transform: translateY(-1px); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .form-note {
+            font-size: 11px;
+            color: #3a5a3a;
+            text-align: center;
+            margin-top: 14px;
+            line-height: 1.6;
+        }
+        .form-error {
+            background: rgba(192,57,43,0.12);
+            border: 1px solid rgba(192,57,43,0.4);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #e07070;
+            margin-bottom: 16px;
+            display: none;
+        }
+        @media (max-width: 480px) {
+            .beta-perks { grid-template-columns: 1fr; }
+            .form-box { padding: 24px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">
+            <img src="img/rpn-logo.png" alt="RPN Logo" class="nav-logo-img">
+            <span class="nav-logo-text">Radio Prepper Network</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html#about">About</a>
+            <a href="index.html#app">Field Brain</a>
+            <a href="index.html#join">Join</a>
+            <a href="beta.html" class="nav-cta">Beta Sign Up</a>
+        </div>
+        <button class="nav-hamburger" onclick="this.closest('nav').querySelector('.nav-mobile').classList.toggle('open')" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    <div class="nav-mobile">
+        <a href="index.html#about">About</a>
+        <a href="index.html#app">Field Brain</a>
+        <a href="index.html#join">Join</a>
+        <a href="beta.html">Beta Sign Up</a>
+    </div>
+</nav>
+
+<div class="beta-page">
+
+    <div class="beta-hero">
+        <div class="beta-badge">&#9679; Beta Programme</div>
+        <h1>RPN Field Brain <span>Beta</span></h1>
+        <p>Help us test the future of offline emergency preparedness. RPN Field Brain is currently in beta testing — we're looking for testers to help us find bugs, improve the experience, and shape the official V1 release.</p>
+        <div class="beta-disclaimer">&#9888; This is a beta version and may contain bugs or unfinished features.</div>
+    </div>
+
+    <div class="beta-main">
+
+        <div class="beta-perks">
+            <div class="beta-perk">
+                <div class="beta-perk-icon">&#128241;</div>
+                <div class="beta-perk-text">
+                    <strong>Early Access</strong>
+                    Get the app before the official launch.
+                </div>
+            </div>
+            <div class="beta-perk">
+                <div class="beta-perk-icon">&#127381;</div>
+                <div class="beta-perk-text">
+                    <strong>Shape V1</strong>
+                    Your feedback directly influences the final release.
+                </div>
+            </div>
+            <div class="beta-perk">
+                <div class="beta-perk-icon">&#128276;</div>
+                <div class="beta-perk-text">
+                    <strong>Update Alerts</strong>
+                    We'll notify you when a new beta build drops.
+                </div>
+            </div>
+            <div class="beta-perk">
+                <div class="beta-perk-icon">&#128244;</div>
+                <div class="beta-perk-text">
+                    <strong>Free Forever</strong>
+                    No cost during beta. Always free for testers.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-box">
+            <h2>Join the Beta</h2>
+            <p>Fill in your details below to get instant access to the latest beta build.</p>
+
+            <div class="form-error" id="formError"></div>
+
+            <form id="betaForm" onsubmit="submitForm(event)">
+                <div class="form-field">
+                    <label for="f_name">Name <span style="color:#3a5a3a;font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+                    <input type="text" id="f_name" placeholder="Your name or callsign" autocomplete="name">
+                </div>
+                <div class="form-field">
+                    <label for="f_email">Email Address *</label>
+                    <input type="email" id="f_email" placeholder="you@example.com" autocomplete="email" required>
+                </div>
+                <button type="submit" class="btn-submit" id="submitBtn">Join Beta &amp; Download &#8594;</button>
+            </form>
+
+            <p class="form-note">
+                &#128274; We'll only use your email to send beta updates and the V1 launch announcement.<br>
+                No spam. Unsubscribe any time.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="img/rpn-logo.png" alt="RPN" class="footer-logo">
+                <div>
+                    <div class="footer-name">Radio Prepper Network</div>
+                    <div class="footer-tagline">Stay Prepared. Stay Ready. Stay Connected.</div>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="index.html#about">About</a>
+                <a href="index.html#app">Field Brain</a>
+                <a href="index.html#join">Join</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Radio Prepper Network. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+// ============================================================
+// SUPABASE CONFIG
+// 1. Go to https://supabase.com and create a free account
+// 2. Create a new project
+// 3. Go to Project Settings → API
+// 4. Copy your Project URL and anon/public key below
+// ============================================================
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+// ============================================================
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+function showError(msg) {
+    const el = document.getElementById('formError');
+    el.textContent = msg;
+    el.style.display = 'block';
+    window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+}
+
+function hideError() {
+    document.getElementById('formError').style.display = 'none';
+}
+
+async function getIp() {
+    try {
+        const r = await fetch('https://api.ipify.org?format=json');
+        const d = await r.json();
+        return d.ip || null;
+    } catch(e) { return null; }
+}
+
+async function submitForm(e) {
+    e.preventDefault();
+    hideError();
+
+    const name  = document.getElementById('f_name').value.trim();
+    const email = document.getElementById('f_email').value.trim().toLowerCase();
+
+    if (!email) { showError('Please enter your email address.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('Please enter a valid email address.'); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Signing you up…';
+
+    const ip = await getIp();
+
+    const { data, error } = await sb
+        .from('beta_signups')
+        .insert({ name: name || null, email, ip_address: ip })
+        .select('token')
+        .single();
+
+    if (error) {
+        if (error.code === '23505') {
+            // Already signed up — fetch their existing token
+            const { data: existing, error: fetchErr } = await sb
+                .from('beta_signups')
+                .select('token')
+                .eq('email', email)
+                .single();
+
+            if (existing) {
+                window.location.href = 'download.html?token=' + existing.token;
+                return;
+            }
+            showError('This email is already registered. Check your original sign-up link or contact us.');
+        } else {
+            console.error(error);
+            showError('Something went wrong. Please try again in a moment.');
+        }
+        btn.disabled = false;
+        btn.textContent = 'Join Beta & Download →';
+        return;
+    }
+
+    window.location.href = 'download.html?token=' + data.token;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPN Field Brain Beta — Download</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .dl-page { padding-top: 64px; min-height: 100vh; display: flex; flex-direction: column; }
+        .dl-main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+        }
+        .dl-card {
+            background: var(--green-surface);
+            border: 1px solid var(--green-border);
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+        }
+        .dl-icon { font-size: 56px; margin-bottom: 16px; }
+        .dl-badge {
+            display: inline-block;
+            background: rgba(109,191,90,0.12);
+            border: 1px solid var(--green-bright);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-family: var(--font-heading);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--green-bright);
+            margin-bottom: 20px;
+        }
+        .dl-card h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(22px, 4vw, 30px);
+            font-weight: 700;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+        .dl-card .dl-sub {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+        .btn-download {
+            display: inline-block;
+            background: var(--green-accent);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            padding: 18px 40px;
+            font-family: var(--font-heading);
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s;
+            margin-bottom: 24px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .btn-download:hover { background: var(--green-bright); transform: translateY(-2px); }
+        .install-steps {
+            background: var(--green-mid);
+            border: 1px solid var(--green-border);
+            border-radius: 10px;
+            padding: 20px 24px;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+        .install-steps h3 {
+            font-family: var(--font-heading);
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .install-step {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+        .install-step:last-child { margin-bottom: 0; }
+        .install-step-num {
+            width: 22px;
+            height: 22px;
+            background: var(--green-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--white);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .token-box {
+            background: #0a140a;
+            border: 1px solid #1a2a1a;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 12px;
+            color: #4a6a4a;
+            text-align: left;
+            line-height: 1.6;
+        }
+        .token-box strong { color: #5a7a5a; }
+        .dl-loading { color: var(--text-muted); font-size: 15px; }
+        .dl-error {
+            color: #e07070;
+            background: rgba(192,57,43,0.1);
+            border: 1px solid rgba(192,57,43,0.3);
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .dl-error h2 { font-family: var(--font-heading); margin-bottom: 8px; color: #e07070; }
+        .dl-error p { font-size: 13px; line-height: 1.6; }
+        @media (max-width: 480px) {
+            .dl-card { padding: 32px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-inner">
+        <a href="index.html" class="nav-logo">
+            <img src="img/rpn-logo.png" alt="RPN Logo" class="nav-logo-img">
+            <span class="nav-logo-text">Radio Prepper Network</span>
+        </a>
+        <div class="nav-links">
+            <a href="index.html#about">About</a>
+            <a href="index.html#app">Field Brain</a>
+            <a href="beta.html" class="nav-cta">Beta Sign Up</a>
+        </div>
+    </div>
+</nav>
+
+<div class="dl-page">
+    <div class="dl-main">
+        <div class="dl-card" id="dlCard">
+            <div class="dl-loading">&#8987; Verifying your access…</div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="img/rpn-logo.png" alt="RPN" class="footer-logo">
+                <div>
+                    <div class="footer-name">Radio Prepper Network</div>
+                    <div class="footer-tagline">Stay Prepared. Stay Ready. Stay Connected.</div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Radio Prepper Network. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+// ============================================================
+// SUPABASE CONFIG — same values as beta.html
+// ============================================================
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+// ============================================================
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const APK_PATH = 'apk/rpn-field-brain.apk';
+
+const params = new URLSearchParams(window.location.search);
+const token  = params.get('token');
+
+function showError(title, msg) {
+    document.getElementById('dlCard').innerHTML =
+        '<div class="dl-error"><h2>&#10005; ' + title + '</h2><p>' + msg + '</p></div>'
+        + '<a href="beta.html" class="btn-download" style="display:block;text-decoration:none;">Sign up for beta access &rarr;</a>';
+}
+
+async function trackDownload(token) {
+    await sb.from('beta_signups')
+        .update({ download_count: sb.rpc ? undefined : undefined }) // placeholder — real update below
+        .eq('token', token);
+
+    // Increment download_count and set last_downloaded_at
+    await sb.rpc('increment_download', { ttoken: token });
+}
+
+async function init() {
+    if (!token) {
+        showError('No Access Token', 'You need to sign up for the beta to download the app.');
+        return;
+    }
+
+    const { data, error } = await sb
+        .from('beta_signups')
+        .select('id, name, email, token, download_count')
+        .eq('token', token)
+        .single();
+
+    if (error || !data) {
+        showError('Invalid or Expired Link', 'This download link is not valid. Please sign up again or contact us if you think this is an error.');
+        return;
+    }
+
+    const firstName = data.name ? data.name.split(' ')[0] : 'Beta Tester';
+    const pageUrl   = window.location.origin + window.location.pathname + '?token=' + token;
+
+    document.getElementById('dlCard').innerHTML = `
+        <div class="dl-icon">&#128737;</div>
+        <div class="dl-badge">&#10003; Beta Access Confirmed</div>
+        <h1>Thanks for joining<br>the RPN Beta</h1>
+        <p class="dl-sub">Your feedback helps improve the app before the official release. Download the latest beta build below.</p>
+
+        <a href="${APK_PATH}" class="btn-download" id="dlBtn" download onclick="onDownload()">
+            &#8659; Download Field Brain Beta
+        </a>
+
+        <div class="install-steps">
+            <h3>How to install</h3>
+            <div class="install-step">
+                <div class="install-step-num">1</div>
+                <div>Tap the download button above and wait for the APK to save to your phone.</div>
+            </div>
+            <div class="install-step">
+                <div class="install-step-num">2</div>
+                <div>Open your <strong style="color:var(--text);">Downloads</strong> folder and tap <strong style="color:var(--text);">rpn-field-brain.apk</strong>.</div>
+            </div>
+            <div class="install-step">
+                <div class="install-step-num">3</div>
+                <div>If prompted, tap <strong style="color:var(--text);">Allow from this source</strong> to enable installing from unknown sources.</div>
+            </div>
+            <div class="install-step">
+                <div class="install-step-num">4</div>
+                <div>Tap <strong style="color:var(--text);">Install</strong>, then open Field Brain and follow the setup guide.</div>
+            </div>
+        </div>
+
+        <div class="token-box">
+            <strong>&#128279; Your personal download link</strong><br>
+            Bookmark this page — it's your unique access link for future beta updates.<br>
+            <span style="font-size:11px;word-break:break-all;color:#3a5a3a;">${pageUrl}</span>
+        </div>
+    `;
+
+    // Track this page visit
+    try {
+        await sb.from('beta_signups')
+            .update({ last_downloaded_at: new Date().toISOString(), download_count: (data.download_count || 0) + 1 })
+            .eq('token', token);
+    } catch(e) { /* non-critical */ }
+}
+
+function onDownload() {
+    // Secondary download count bump on explicit click (belt and braces)
+    // Already tracked on page load above
+}
+
+init();
+</script>
+</body>
+</html>
