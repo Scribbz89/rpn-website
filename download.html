@@ -223,33 +223,41 @@ async function init() {
         <div class="dl-icon">&#128737;</div>
         <div class="dl-badge">&#10003; Beta Access Confirmed</div>
         <h1>Thanks for joining<br>the RPN Beta</h1>
-        <p class="dl-sub">Your feedback helps improve the app before the official release. Download the latest beta build below.</p>
+        <p class="dl-sub">Your feedback helps improve the app before the official release. Choose your platform below.</p>
 
-        <a href="${APK_PATH}" class="btn-download" id="dlBtn" download>
-            &#8659; Download Field Brain Beta
-        </a>
-
-        <div class="install-steps">
-            <h3>How to install</h3>
-            <div class="install-step">
-                <div class="install-step-num">1</div>
-                <div>Tap the download button above and wait for the APK to save to your phone.</div>
-            </div>
-            <div class="install-step">
-                <div class="install-step-num">2</div>
-                <div>Open your <strong style="color:var(--text);">Downloads</strong> folder and tap <strong style="color:var(--text);">rpn-field-brain.apk</strong>.</div>
-            </div>
-            <div class="install-step">
-                <div class="install-step-num">3</div>
-                <div>If prompted, tap <strong style="color:var(--text);">Allow from this source</strong> to enable installing from unknown sources.</div>
-            </div>
-            <div class="install-step">
-                <div class="install-step-num">4</div>
-                <div>Tap <strong style="color:var(--text);">Install</strong>, then open Field Brain and follow the setup guide.</div>
-            </div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:28px;">
+            <a href="apk/rpn-field-brain.apk" class="btn-download" download style="margin-bottom:0;">
+                &#128241; Android APK
+            </a>
+            <a href="exe/rpn-field-brain.exe" class="btn-download" download style="margin-bottom:0;background:#1a3a5a;">
+                &#128187; Windows (.exe)
+            </a>
+            <a href="linux/rpn-field-brain.AppImage" class="btn-download" download style="margin-bottom:0;background:#2a1a4a;">
+                &#128039; Linux (AppImage)
+            </a>
         </div>
 
-        <div class="token-box">
+        <div class="install-steps">
+            <h3>Android — how to install</h3>
+            <div class="install-step"><div class="install-step-num">1</div><div>Download the APK and open your <strong style="color:var(--text);">Downloads</strong> folder.</div></div>
+            <div class="install-step"><div class="install-step-num">2</div><div>Tap <strong style="color:var(--text);">rpn-field-brain.apk</strong> and allow install from unknown sources if prompted.</div></div>
+            <div class="install-step"><div class="install-step-num">3</div><div>Tap <strong style="color:var(--text);">Install</strong>, open Field Brain and follow the setup guide.</div></div>
+        </div>
+
+        <div class="install-steps" style="margin-top:12px;">
+            <h3>Windows — how to install</h3>
+            <div class="install-step"><div class="install-step-num">1</div><div>Download the .exe — it's a portable app, no installer needed.</div></div>
+            <div class="install-step"><div class="install-step-num">2</div><div>If Windows SmartScreen warns you, click <strong style="color:var(--text);">More info → Run anyway</strong>.</div></div>
+            <div class="install-step"><div class="install-step-num">3</div><div>Field Brain will launch. Your data is saved in your user profile.</div></div>
+        </div>
+
+        <div class="install-steps" style="margin-top:12px;">
+            <h3>Linux — how to install</h3>
+            <div class="install-step"><div class="install-step-num">1</div><div>Download the AppImage and make it executable: <code style="color:var(--green-bright);">chmod +x rpn-field-brain.AppImage</code></div></div>
+            <div class="install-step"><div class="install-step-num">2</div><div>Double-click or run it from terminal.</div></div>
+        </div>
+
+        <div class="token-box" style="margin-top:20px;">
             <strong>&#128279; Your personal download link</strong><br>
             Bookmark this page — it's your unique access link for future beta updates.<br>
             <span style="font-size:11px;word-break:break-all;color:#3a5a3a;">${pageUrl}</span>
